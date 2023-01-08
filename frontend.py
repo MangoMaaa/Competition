@@ -91,14 +91,15 @@ class Competitors(ttk.Frame):
         self.Listbox_frame = ttk.Frame(self.content_frame)
         self.Listbox_frame.grid(row=2, column=0, sticky='NS')
 
+        # Header Label
+        ttk.Label(self.header_frame, text="Competitors", font=("verdana", 22, 'bold'), foreground="red").grid(row=0, column=1, sticky="w")
+        
         # data entry labels
 
-        ttk.Label(self.data_entry_frame, text='Forename:').grid(row=0, column=5, ipadx=1, ipady=5, padx=1, pady=10, sticky='e')
-        ttk.Label(self.data_entry_frame, text='Surname:').grid(row=1, column=5, ipadx=1, ipady=5, padx=1, pady=10, sticky='e')
-        ttk.Label(self.data_entry_frame, text='Team_name:').grid(row=2, column=5, ipadx=1, ipady=5, padx=1, pady=10, sticky='e')
-        ttk.Label(self.data_entry_frame, text='Competitor_ID:').grid(row=3, column=5, ipadx=1, ipady=5, padx=1, pady=10, sticky='e')
-        ttk.Label(self.data_entry_frame, text='Competitor_type_ID:').grid(row=4, column=5, ipadx=1, ipady=5, padx=1, pady=10, sticky='e')
-        ttk.Label(self.header_frame, text="Competitors", font=("verdana", 22, 'bold'), foreground="red").grid(row=0, column=1, sticky="w")
+        text = ['Forename:','Surname:','Team Name:','Competitor ID:','Competitor Type ID:']
+        for i in range(len(text)):
+            ttk.Label(self.data_entry_frame, text=text[i]).grid(row=i, column=5, ipadx=1, ipady=5, padx=1, pady=10, sticky="e")
+        
 
         # Data entry buttons
 
@@ -117,18 +118,18 @@ class Competitors(ttk.Frame):
         self.lstResults.grid(row=0, column=0, padx=5, pady=5)
 
         # scroll bar
-        print(self.lstResults)
-        self.scb_lstResults = ttk.Scrollbar(self.Listbox_frame).grid(row=0, column=1, sticky='ns')
+        self.scb_lstResults = ttk.Scrollbar(self.Listbox_frame)
+        self.scb_lstResults.grid(row=0, column=1, sticky='ns')
 
-        #self.lstResults.configure(scroll_command=self.scb_lstResults.set)
-        #self.scb_lstResults.configure(command=self.lstResults.view)
+        self.lstResults.configure(yscrollcommand = self.scb_lstResults.set)
+        self.scb_lstResults.config(command = self.lstResults.yview)
 
-        #self.lstResults.bind('<<ListboxSelect>>', self.get_selected_row)
+        self.scb_lstResults.bind('<<listboxSelect>>', self.get_selected_row)
 
         # Buttons frame
 
-        text = ['View All','Search','Add','Update Selected','Delete Selected']
-        functions = [self.view_all_command, self.competitor_search_command, self.add_command, self.update_command, self.delete_command]
+        text = ['View All','Search','Add','Update Selected','Delete Selected', 'Main Menu']
+        functions = [self.view_all_command, self.competitor_search_command, self.add_command, self.update_command, self.delete_command, lambda: controller.show_frame(MainMenu)]
         for i in range(len(text)):
             button = ttk.Button(self.buttons_frame, text=text[i], width=14, command=functions[i])
             button.grid(row=0, column=i+1, padx=5, pady=10, sticky='n')
@@ -150,7 +151,7 @@ class Competitors(ttk.Frame):
     def get_selected_row(self, event):
         try:
             global selected_tuple
-            index = self.lstResults.curselection()
+            self.lstResults.curselection()
             print(selected_tuple)
             self.entry_Forename.delete(0, 'end')
             self.entry_Forename.insert('end', selected_tuple[1])
@@ -216,19 +217,24 @@ class Events(ttk.Frame):
         ttk.Label(self.header_frame, text='Events', font=('monsterrat', 22, 'bold'), foreground='blue').grid(row=0, column=1, sticky='W')
 
         # data entry section - labels
+        labels = ['Event', 'Competitor ID', 'Activity ID', 'Score', 'Event ID']
 
-        ttk.Label(self.data_entry_frame, text='Event ').grid(row=0, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky='w')
-        ttk.Label(self.data_entry_frame, text='Competitor ID').grid(row=1, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky='W')
-        ttk.Label(self.data_entry_frame, text='Activity ID').grid(row=2, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky='W')
-        ttk.Label(self.data_entry_frame, text='Score').grid(row=3, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky='W')
-        ttk.Label(self.data_entry_frame, text='Event ID').grid(row=4, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky='W')
+        for i in range(len(labels)):
+            ttk.Label(self.data_entry_frame, text=labels[i]).grid(row=i, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
+
+        ttk.Label(self.data_entry_frame, text="Event").grid(row=0, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
+        ttk.Label(self.data_entry_frame, text="Competitor ID").grid(row=1, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
+        ttk.Label(self.data_entry_frame, text="Activity ID").grid(row=2, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
+        ttk.Label(self.data_entry_frame, text="Score").grid(row=3, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
+        ttk.Label(self.data_entry_frame, text="Event ID").grid(row=4, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
 
         # data entry section - entry buttons
-        self.entry_eventID = ttk.Entry(self.data_entry_frame, textvariable=self.event_id_text, width=15).grid(row=0, column=0, padx=0, pady=0)
+        self.entry_eventID = ttk.Entry(self.data_entry_frame, textvariable=self.event_id_text, width=15).grid(row=0, column=1, padx=0, pady=0)
         self.entry_Competitor_ID = ttk.Entry(self.data_entry_frame, textvariable=self.competitor_id_text, width=15).grid(row=1, column=1, padx=0, pady=0)
         self.entry_activityID = ttk.Entry(self.data_entry_frame, textvariable=self.activity_id_text, width=15).grid(row=2, column=1, padx=0, pady=0)
         self.entry_ScoreID = ttk.Entry(self.data_entry_frame, textvariable=self.score_id_text, width=15).grid(row=3, column=1, padx=0, pady=0)
         self.entry_event_type = ttk.Entry(self.data_entry_frame, textvariable=self.event_type_text, width=15).grid(row=4, column=1, padx=0, pady=0)
+
 
         #list box
         self.lstResults = tk.Listbox(self.listbox_frame, width=60)
@@ -238,10 +244,10 @@ class Events(ttk.Frame):
         self.scb_lstResults = ttk.Scrollbar(self.listbox_frame)
         self.scb_lstResults.grid(row=0, column=7, sticky='ns')
 
-        #self.lstResults.configure(yscrollcommand=self.scb_lstResults.set)
-        #self.scb_lstResults.configure(command=self.scb_lstResults.yview)
+        self.lstResults.configure(yscrollcommand = self.scb_lstResults.set)
+        self.scb_lstResults.config(command = self.lstResults.yview)
 
-        #self.scb_lstResults.bind('<<listboxSelect>>', self.event_get_selected_row)
+        self.scb_lstResults.bind('<<listboxSelect>>', self.event_get_selected_row)
 
         #buttons frame:
         ttk.Button(self.buttons_frame, text='View All', width=14, command=self.event_view_all_command).grid(row=0, column=0, padx=5, pady=5, sticky='n')
@@ -270,6 +276,8 @@ class Events(ttk.Frame):
             for i in range(len(entryRemoval)):
                 entryRemoval[i].delete(0, 'end')
                 entryRemoval[i].insert('end', selected_tuple[i])
+
+            # Find a way to test this
             '''
             self.entry_eventID.delete(0, 'end')
             self.entry_eventID.insert('end', selected_tuple[0])
@@ -288,11 +296,6 @@ class Events(ttk.Frame):
     def event_search_command(self):
         self.lstResults.delete(0, 'end')
         for row in backend.event_search(self.event_id_text.get(), self.activity_id_text.get(), self.competitor_id_text.get(), self.score_id_text.get(), self.date_text.get(), self.event_type_text.get()):
-            self.lstResults.insert('end', row)
-
-    def event_view_all_command(self):
-        self.lstResults.delete(0, 'end')
-        for row in backend.events_view_all():
             self.lstResults.insert('end', row)
 
 class Leaderboards(ttk.Frame):
