@@ -217,10 +217,6 @@ class Events(ttk.Frame):
         ttk.Label(self.header_frame, text='Events', font=('monsterrat', 22, 'bold'), foreground='blue').grid(row=0, column=1, sticky='W')
 
         # data entry section - labels
-        labels = ['Event', 'Competitor ID', 'Activity ID', 'Score', 'Event ID']
-
-        for i in range(len(labels)):
-            ttk.Label(self.data_entry_frame, text=labels[i]).grid(row=i, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
 
         ttk.Label(self.data_entry_frame, text="Event").grid(row=0, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
         ttk.Label(self.data_entry_frame, text="Competitor ID").grid(row=1, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
