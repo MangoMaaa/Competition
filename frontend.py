@@ -4,6 +4,7 @@ from PIL import ImageTk, Image
 
 import backend as backend
 
+
 class App(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, *kwargs)
@@ -93,13 +94,12 @@ class Competitors(ttk.Frame):
 
         # Header Label
         ttk.Label(self.header_frame, text="Competitors", font=("verdana", 22, 'bold'), foreground="red").grid(row=0, column=1, sticky="w")
-        
+
         # data entry labels
 
-        text = ['Forename:','Surname:','Team Name:','Competitor ID:','Competitor Type ID:']
+        text = ['Forename:', 'Surname:', 'Team Name:', 'Competitor ID:', 'Competitor Type ID:']
         for i in range(len(text)):
             ttk.Label(self.data_entry_frame, text=text[i]).grid(row=i, column=5, ipadx=1, ipady=5, padx=1, pady=10, sticky="e")
-        
 
         # Data entry buttons
 
@@ -121,18 +121,18 @@ class Competitors(ttk.Frame):
         self.scb_lstResults = ttk.Scrollbar(self.Listbox_frame)
         self.scb_lstResults.grid(row=0, column=1, sticky='ns')
 
-        self.lstResults.configure(yscrollcommand = self.scb_lstResults.set)
-        self.scb_lstResults.config(command = self.lstResults.yview)
+        self.lstResults.configure(yscrollcommand=self.scb_lstResults.set)
+        self.scb_lstResults.config(command=self.lstResults.yview)
 
         self.scb_lstResults.bind('<<listboxSelect>>', self.get_selected_row)
 
         # Buttons frame
 
-        text = ['View All','Search','Add','Update Selected','Delete Selected', 'Main Menu']
+        text = ['View All', 'Search', 'Add', 'Update Selected', 'Delete Selected', 'Main Menu']
         functions = [self.view_all_command, self.competitor_search_command, self.add_command, self.update_command, self.delete_command, lambda: controller.show_frame(MainMenu)]
         for i in range(len(text)):
             button = ttk.Button(self.buttons_frame, text=text[i], width=14, command=functions[i])
-            button.grid(row=0, column=i+1, padx=5, pady=10, sticky='n')
+            button.grid(row=0, column=i + 1, padx=5, pady=10, sticky='n')
 
         '''
         ttk.Button(self.buttons_frame, text='View All', width=14, command=self.view_all_command).grid(row=0, column=1, padx=5, pady=10,sticky='n')
@@ -229,32 +229,31 @@ class Events(ttk.Frame):
         self.entry_Competitor_ID = ttk.Entry(self.data_entry_frame, textvariable=self.competitor_id_text, width=15).grid(row=1, column=1, padx=0, pady=0)
         self.entry_activityID = ttk.Entry(self.data_entry_frame, textvariable=self.activity_id_text, width=15).grid(row=2, column=1, padx=0, pady=0)
         self.entry_ScoreID = ttk.Entry(self.data_entry_frame, textvariable=self.score_id_text, width=15).grid(row=3, column=1, padx=0, pady=0)
-        self.entry_event_type = ttk.Entry(self.data_entry_frame, textvariable=self.event_type_text, width=15).grid(row=4, column=1, padx=0, pady=0)
+        self.entry_date = ttk.Entry(self.data_entry_frame, textvariable=self.date_text, width=15).grid(row=4, column=1, padx=0, pady=0)
+        self.entry_event_type = ttk.Entry(self.data_entry_frame, textvariable=self.event_type_text, width=15).grid(row=5, column=1, padx=0, pady=0)
 
-
-        #list box
+        # list box
         self.lstResults = tk.Listbox(self.listbox_frame, width=60)
         self.lstResults.grid(row=0, column=6, padx=0, pady=0)
 
-        #scroll bar for list box
+        # scroll bar for list box
         self.scb_lstResults = ttk.Scrollbar(self.listbox_frame)
         self.scb_lstResults.grid(row=0, column=7, sticky='ns')
 
-        self.lstResults.configure(yscrollcommand = self.scb_lstResults.set)
-        self.scb_lstResults.config(command = self.lstResults.yview)
+        self.lstResults.configure(yscrollcommand=self.scb_lstResults.set)
+        self.scb_lstResults.config(command=self.lstResults.yview)
 
         self.scb_lstResults.bind('<<listboxSelect>>', self.event_get_selected_row)
 
-        #buttons frame:
-        ttk.Button(self.buttons_frame, text='View All', width=14, command=self.event_view_all_command).grid(row=0, column=0, padx=5, pady=5, sticky='n')
-        ttk.Button(self.buttons_frame, text='Search', width=14, command=self.event_search_command()).grid(row=0, column=1, padx=5, pady=5, sticky='n')
-        #ttk.Button(self.buttons_frame, text='Add', width=14, command=self.).grid(row=0, column=2, padx=5, pady=5, sticky='n')
-        #ttk.Button(self.buttons_frame, text='Update Selected', width=14, command=self. ).grid(row=0, column=3, padx=5, pady=5, sticky='n')
-        #ttk.Button(self.buttons_frame, text='Delete Selected', width=14, command=self. ).grid(row=0, column=4, padx=5, pady=5, sticky='n')
-        #ttk.Button(self.buttons_frame, text='Main Menu', width=14, command=self. ).grid(row=0, column=5, padx=5, pady=5, sticky='n')
 
+        # buttons frame:
 
+        button_text = ['View All', 'Search', 'Add', 'Update Selected', 'Delete Selected', 'Main Menu']
+        button_functions = [self.event_view_all_command, self.event_search_command, self.event_add_command, self.event_update_command, self.event_delete_command, lambda: controller.show_frame(MainMenu)]
 
+        for i in range(len(button_text)):
+            button = ttk.Button(self.buttons_frame, text=button_text[i], width=14, command=button_functions[i])
+            button.grid(row=0, column=i, padx=5, pady=5, sticky='n')
 
 
     def event_view_all_command(self):
@@ -267,11 +266,11 @@ class Events(ttk.Frame):
             global selected_tuple
             index = self.lstResults.curselection()[0]
             selected_tuple = self.lstResults.get(index)
-            entryRemoval = [self.entry_eventID, self.entry_activityID, self.entry_Competitor_ID, self.entry_ScoreID, self.entry_eventID]
+            entry_removal = [self.entry_eventID, self.entry_activityID, self.entry_Competitor_ID, self.entry_ScoreID, self.entry_eventID]
 
-            for i in range(len(entryRemoval)):
-                entryRemoval[i].delete(0, 'end')
-                entryRemoval[i].insert('end', selected_tuple[i])
+            for i in range(len(entry_removal)):
+                entry_removal[i].delete(0, 'end')
+                entry_removal[i].insert('end', selected_tuple[i])
 
             # Find a way to test this
             '''
@@ -293,6 +292,23 @@ class Events(ttk.Frame):
         self.lstResults.delete(0, 'end')
         for row in backend.event_search(self.event_id_text.get(), self.activity_id_text.get(), self.competitor_id_text.get(), self.score_id_text.get(), self.date_text.get(), self.event_type_text.get()):
             self.lstResults.insert('end', row)
+
+    def event_add_command(self):
+        backend.insert_events(self.event_id_text.get(), self.activity_id_text.get(), int(self.competitor_id_text.get()), int(self.score_id_text.get()), self.date_text.get(), self.event_type_text.get())
+        self.lstResults.delete(0,'end')
+        self.lstResults.insert('end', (self.event_id_text.get(), self.activity_id_text.get(), int(self.competitor_id_text.get()), int(self.score_id_text.get()), self.date_text.get(), self.event_type_text.get()))
+        for row in backend.events_view_all():
+            self.lstResults.insert('end', row)
+
+    def event_update_command(self):
+        backend.update_events(selected_tuple[0], self.activity_id_text.get(), self.competitor_id_text.get(), self.score_id_text.get(), self.date_text.get(), self.event_type_text.get())
+
+    def event_delete_command(self):
+        print("Yas queen slay")
+        self.lstResults.delete(0, 'end')
+        for row in backend.delete_event(selected_tuple[0]):
+            self.lstResults.insert('end', row)
+
 
 class Leaderboards(ttk.Frame):
     def __init__(self, container, controller):

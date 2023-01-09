@@ -27,6 +27,10 @@ def events_view_all():
 def event_search(*array):
     return cur.execute("")
 
+def insert_events(*array):
+    print(array)
+    return cur.execute(f"INSERT INTO tblEvents VALUES ({array})")
+
 #Leaderboard Functions:
 
 #Admin Functions:
