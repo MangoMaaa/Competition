@@ -33,35 +33,17 @@ class MainMenu(ttk.Frame):
     def __init__(self, container, controller):
         super().__init__(container)
 
+        # Header Label
         lblMainMenu = ttk.Label(self, text="Main Menu")
         lblMainMenu.grid(row=0, column=0, sticky="w")
 
-        # self.neco_arc = ImageTk.PhotoImage(file='Neco-Arc_Remake (1).png')
-        # tk.Label(self.header_frame, image=self.neco_arc, anchor='w').grid(row=0, column=0, sticky='w')
-        # img_neco_arc = Image.open('Neco-Arc_Remake (1).png')
-        # resizedImage = img_neco_arc.resize((332, 210), Image.Resampling.LANCZOS)
-        # img_neco_arc = ImageTk.PhotoImage(resizedImage)
-        # my_image = ttk.Label(self, image=img_neco_arc)
-        # my_image.image = img_neco_arc
-        # my_image.grid(row=2, rowspan=6, column=0)
+        button_text = [Competitors, Events, Leaderboards, Activities, Admin]
+        for i in range(len(button_text)):
+            button = ttk.Button(self, text=button_text[i].__name__, width=15, command=lambda i=i: (controller.show_frame(button_text[i])))
+            button.grid(row=i, column=1, padx=10, pady=15)
 
-        btnCompTeam = ttk.Button(self, text='Competitor(s)', width=15, command=lambda: controller.show_frame(Competitors))
-        btnCompTeam.grid(row=1, column=1, padx=10, pady=15)
-
-        btnEvents = ttk.Button(self, text='Events', width=15, command=lambda: controller.show_frame(Events))
-        btnEvents.grid(row=2, column=1, padx=10, pady=15)
-
-        btnLeaderBoards = ttk.Button(self, text='LeaderBoards', width=15, command=lambda: controller.show_frame(Leaderboards))
-        btnLeaderBoards.grid(row=3, column=1, padx=10, pady=15)
-
-        btnActivities = ttk.Button(self, text='Activities', width=15, command=lambda: controller.show_frame(Activities))
-        btnActivities.grid(row=4, column=1, padx=10, pady=15)
-
-        btnAdmin = ttk.Button(self, text='Admin', width=15, command=lambda: controller.show_frame(Admin))
-        btnAdmin.grid(row=5, column=1, padx=10, pady=15)
-
-        btnExit = ttk.Button(self, text='Exit', width=15, command=lambda: controller.show_frame(exit()))
-        btnExit.grid(row=6, column=1, padx=10, pady=15)
+        exit_button = ttk.Button(self, text="Exit", width=15, command=lambda: exit())
+        exit_button.grid(row=i, column=1, padx=10, pady=15)
 
         # image
         placeholder = Image.open("Neco-Arc_Remake (1).png")
@@ -75,13 +57,15 @@ class MainMenu(ttk.Frame):
 class Competitors(ttk.Frame):
     def __init__(self, container, controller):
         super().__init__(container)
+
+        self.content_frame = ttk.Frame(self)
+        self.content_frame.grid(row=0, column=0)
+
         self.Forename_text = tk.StringVar()
         self.Surname_text = tk.StringVar()
         self.Team_Name_text = tk.StringVar()
         self.Competitor_ID_text = tk.StringVar()
         self.Competitor_Type_ID_text = tk.StringVar()
-        self.content_frame = ttk.Frame(self)
-        self.content_frame.grid(row=0, column=0)
 
         self.buttons_frame = ttk.Frame(self)
         self.buttons_frame.grid(row=0, column=1, ipadx=5, ipady=5, padx=10, pady=10, sticky='n')
@@ -97,20 +81,17 @@ class Competitors(ttk.Frame):
 
         # data entry labels
 
-        text = ['Forename:', 'Surname:', 'Team Name:', 'Competitor ID:', 'Competitor Type ID:']
-        for i in range(len(text)):
-            ttk.Label(self.data_entry_frame, text=text[i]).grid(row=i, column=5, ipadx=1, ipady=5, padx=1, pady=10, sticky="e")
+        label_text = ['Forename', 'Surname', 'Team Name', 'Competitor ID', 'Competitor Type ID']
+
+        for i in range(len(label_text)):
+            ttk.Label(self.data_entry_frame, text=label_text[i]+":").grid(row=i, column=0, padx=5, pady=5, sticky="w")
 
         # Data entry buttons
 
         self.entry_Forename = ttk.Entry(self.data_entry_frame, textvariable=self.Forename_text, width=15).grid(row=0, column=6, padx=15, pady=1)
-
         self.entry_Surname = ttk.Entry(self.data_entry_frame, textvariable=self.Surname_text, width=15).grid(row=1, column=6, padx=15, pady=1)
-
         self.entry_Team_Name = ttk.Entry(self.data_entry_frame, textvariable=self.Team_Name_text, width=15).grid(row=2, column=6, padx=15, pady=1)
-
         self.entry_Competitor_ID = ttk.Entry(self.data_entry_frame, textvariable=self.Competitor_ID_text, width=15).grid(row=3, column=6, padx=15, pady=1)
-
         self.entry_Competitor_Type_ID = ttk.Entry(self.data_entry_frame, textvariable=self.Competitor_Type_ID_text, width=15).grid(row=4, column=6, padx=15, pady=1)
 
         # List box
@@ -133,15 +114,6 @@ class Competitors(ttk.Frame):
         for i in range(len(text)):
             button = ttk.Button(self.buttons_frame, text=text[i], width=14, command=functions[i])
             button.grid(row=0, column=i + 1, padx=5, pady=10, sticky='n')
-
-        '''
-        ttk.Button(self.buttons_frame, text='View All', width=14, command=self.view_all_command).grid(row=0, column=1, padx=5, pady=10,sticky='n')
-        ttk.Button(self.buttons_frame, text='Search', width=14, command=self.competitor_search_command).grid(row=0, column=2, padx=5, pady=10, sticky='n')
-        ttk.Button(self.buttons_frame, text='Add', width=14, command=self.add_command).grid(row=0, column=3, padx=5, pady=10, sticky='n')
-        ttk.Button(self.buttons_frame, text='Update Selected', width=14, command=self.update_command).grid(row=0, column=4, padx=6, pady=10, sticky='n')
-        ttk.Button(self.buttons_frame, text='Delete Selected', width=14, command=self.delete_command).grid(row=0, column=5, padx=6, pady=10, sticky='n')
-        ttk.Button(self.buttons_frame, text='Main Menu', width=14, command=lambda: controller.show_frame(MainMenu)).grid(row=0, column=6, padx=6, pady=10, sticky='n')
-        '''
 
     def view_all_command(self):
         self.lstResults.delete(0, 'end')
@@ -218,11 +190,10 @@ class Events(ttk.Frame):
 
         # data entry section - labels
 
-        ttk.Label(self.data_entry_frame, text="Event").grid(row=0, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
-        ttk.Label(self.data_entry_frame, text="Competitor ID").grid(row=1, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
-        ttk.Label(self.data_entry_frame, text="Activity ID").grid(row=2, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
-        ttk.Label(self.data_entry_frame, text="Score").grid(row=3, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
-        ttk.Label(self.data_entry_frame, text="Event ID").grid(row=4, column=0, ipadx=5, ipady=5, padx=10, pady=10, sticky="w")
+        label_text = ['Event', 'Competitor ID', 'Activity ID', 'Score', 'Date', 'Event ID']
+
+        for i in range(len(label_text)):
+            ttk.Label(self.data_entry_frame, text=label_text[i]+":").grid(row=i, column=0, padx=5, pady=5, sticky="w")
 
         # data entry section - entry buttons
         self.entry_eventID = ttk.Entry(self.data_entry_frame, textvariable=self.event_id_text, width=15).grid(row=0, column=1, padx=0, pady=0)
@@ -245,16 +216,15 @@ class Events(ttk.Frame):
 
         self.scb_lstResults.bind('<<listboxSelect>>', self.event_get_selected_row)
 
-
         # buttons frame:
 
         button_text = ['View All', 'Search', 'Add', 'Update Selected', 'Delete Selected', 'Main Menu']
         button_functions = [self.event_view_all_command, self.event_search_command, self.event_add_command, self.event_update_command, self.event_delete_command, lambda: controller.show_frame(MainMenu)]
-
         for i in range(len(button_text)):
+            if i % 2 == 0:
+                c+=1
             button = ttk.Button(self.buttons_frame, text=button_text[i], width=14, command=button_functions[i])
-            button.grid(row=0, column=i, padx=5, pady=5, sticky='n')
-
+            button.grid(row=i, column=2, padx=5, pady=5, sticky='n')
 
     def event_view_all_command(self):
         self.lstResults.delete(0, 'end')
@@ -295,7 +265,7 @@ class Events(ttk.Frame):
 
     def event_add_command(self):
         backend.insert_events(self.event_id_text.get(), self.activity_id_text.get(), int(self.competitor_id_text.get()), int(self.score_id_text.get()), self.date_text.get(), self.event_type_text.get())
-        self.lstResults.delete(0,'end')
+        self.lstResults.delete(0, 'end')
         self.lstResults.insert('end', (self.event_id_text.get(), self.activity_id_text.get(), int(self.competitor_id_text.get()), int(self.score_id_text.get()), self.date_text.get(), self.event_type_text.get()))
         for row in backend.events_view_all():
             self.lstResults.insert('end', row)
