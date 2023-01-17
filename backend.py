@@ -33,8 +33,4 @@ def insert_events(*array):
 
 #Leaderboard Functions:
 
-#Activity Functions:
-def activity_view_all(*array):
-    print(array)
-    return cur.execute("SELECT * FROM tblActivity")
 #Admin Functions:

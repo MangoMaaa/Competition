@@ -35,8 +35,8 @@ class MainMenu(ttk.Frame):
         super().__init__(container)
 
         # Header Label
-        lblMainMenu = ttk.Label(self, text="Main Menu")
-        lblMainMenu.grid(row=0, column=0, sticky="EW")
+        lblMainMenu = ttk.Label(self, text="Main Menu", font=("verdana", 22, 'bold'), foreground="red")
+        lblMainMenu.grid(row=0, column=8, sticky="E")
 
         button_text = [Competitors, Events, Leaderboards, Activities, Admin]
         for i in range(len(button_text)):
@@ -47,6 +47,13 @@ class MainMenu(ttk.Frame):
         exit_button.grid(row=i, column=1, padx=10, pady=15)
 
         # image
+
+        sport_equipment = Image.open("sport equipment.jpg")
+        resized_img = sport_equipment.resize((550, 300), Image.ANTIALIAS)
+        sport_equipment = ImageTk.PhotoImage(resized_img)
+        sport_img = ttk.Label(self, image=sport_equipment)
+        sport_img.image = sport_equipment
+        sport_img.grid(row=1, rowspan=10, column=8)
 
 
 class Competitors(ttk.Frame):
@@ -298,7 +305,7 @@ class Leaderboards(ttk.Frame):
         # Listbox
         self.lstResults = tk.Listbox(self.listbox_frame, width=60)
         self.lstResults.grid(row=0, column=0, padx=5, pady=5)
-        self.listbox_frame.grid(row=2, column=0, sticky='NS')  # found the error
+        self.listbox_frame.grid(row=2, column=0, sticky='NS')
 
         # scroll bar
 
@@ -429,6 +436,7 @@ class Activities(ttk.Frame):
         self.lstResults.delete(0, 'end')
         for row in backend.delete_activity(selected_tuple[0]):
             self.lstResults.insert('end', row)
+
 
 class Admin(ttk.Frame):
     def __init__(self, container, controller):
