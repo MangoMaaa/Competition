@@ -6,6 +6,7 @@ import backend as backend
 
 selected_tuple = ()
 
+
 class App(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, *kwargs)
@@ -30,6 +31,57 @@ class App(tk.Tk):
         frame.tkraise()
 
 
+def layout_frames(self):
+    self.content_frame = ttk.Frame(self)
+    self.content_frame.grid(row=0, column=0)
+
+    self.buttons_frame = ttk.Frame(self.content_frame)
+    self.buttons_frame.grid(row=0, column=1, ipadx=5, ipady=5, padx=10, pady=10)
+
+    self.header_frame = ttk.Frame(self.content_frame)
+    self.header_frame.grid(row=0, column=2, sticky='ew')
+
+    self.data_entry_frame = ttk.Frame(self.content_frame)
+    self.data_entry_frame.grid(row=1, column=3)
+
+    self.listbox_frame = ttk.Frame(self.content_frame)
+    self.listbox_frame.grid(row=2, column=4, sticky='ns')
+
+
+def create_labels(*text):
+    for i in range(len(text)):
+        ttk.Label(text[len(text)-1].data_entry_frame, text=f"{text[i]}:").grid(row=i, column=0, padx=5, pady=5, sticky="W")
+
+
+def create_buttons(*text):
+    try:
+        for i in range(0, len(text), 2):
+            button = ttk.Button(text[len(text)-1].buttons_frame, text=text[i], width=14, command=text[i + 1])
+            button.grid(row=i + 1, column=0, padx=5, pady=10, sticky='n')
+    except IndexError:
+        return
+
+
+def insert_image(imageName, sf, imageWidth, imageHeight):
+    sport_equipment = Image.open(imageName)
+    resized_img = sport_equipment.resize((imageWidth, imageHeight), Image.Resampling.LANCZOS)
+    sport_equipment = ImageTk.PhotoImage(resized_img)
+    sport_img = ttk.Label(sf, image=sport_equipment)
+    sport_img.image = sport_equipment
+    sport_img.grid(row=1, rowspan=10, column=8)
+
+
+def create_scrollbar(self):
+    self.lstResults = tk.Listbox(self.listbox_frame, width=60)
+    self.lstResults.grid(row=0, column=0, padx=5, pady=5)
+
+    self.scb_lstResults = ttk.Scrollbar(self.listbox_frame)
+    self.scb_lstResults.grid(row=0, column=1, sticky="NS")
+
+    self.lstResults.configure(yscrollcommand=self.scb_lstResults.set)
+    self.scb_lstResults.config(command=self.lstResults.yview)
+
+
 class MainMenu(ttk.Frame):
     def __init__(self, container, controller):
         super().__init__(container)
@@ -47,21 +99,16 @@ class MainMenu(ttk.Frame):
         exit_button.grid(row=i, column=1, padx=10, pady=15)
 
         # image
-
-        sport_equipment = Image.open("sport equipment.jpg")
-        resized_img = sport_equipment.resize((550, 300), Image.ANTIALIAS)
-        sport_equipment = ImageTk.PhotoImage(resized_img)
-        sport_img = ttk.Label(self, image=sport_equipment)
-        sport_img.image = sport_equipment
-        sport_img.grid(row=1, rowspan=10, column=8)
+        insert_image("sport equipment.jpg", self, 550, 300)
 
 
 class Competitors(ttk.Frame):
     def __init__(self, container, controller):
         super().__init__(container)
 
-        self.content_frame = ttk.Frame(self)
-        self.content_frame.grid(row=0, column=0)
+        layout_frames(self)
+
+        ttk.Label(self.header_frame, text="Competitors", font=("verdana", 22, 'bold'), foreground="red").grid(row=0, column=1, sticky="w")
 
         self.Forename_text = tk.StringVar()
         self.Surname_text = tk.StringVar()
@@ -69,53 +116,28 @@ class Competitors(ttk.Frame):
         self.Competitor_ID_text = tk.StringVar()
         self.Competitor_Type_ID_text = tk.StringVar()
 
-        self.buttons_frame = ttk.Frame(self)
-        self.buttons_frame.grid(row=0, column=1, ipadx=5, ipady=5, padx=10, pady=10, sticky='n')
-        self.header_frame = ttk.Frame(self.content_frame)
-        self.header_frame.grid(row=0, column=0, sticky='EW')
-        self.data_entry_frame = ttk.Frame(self.content_frame)
-        self.data_entry_frame.grid(row=1, column=0)
-        self.Listbox_frame = ttk.Frame(self.content_frame)
-        self.Listbox_frame.grid(row=2, column=0, sticky='NS')
-
-        # Header Label
-        ttk.Label(self.header_frame, text="Competitors", font=("verdana", 22, 'bold'), foreground="red").grid(row=0, column=1, sticky="w")
-
         # data entry labels
-
-        label_text = ['Forename', 'Surname', 'Team Name', 'Competitor ID', 'Competitor Type ID']
-
-        for i in range(len(label_text)):
-            ttk.Label(self.data_entry_frame, text=label_text[i] + ":").grid(row=i, column=0, padx=5, pady=5, sticky="w")
-
+        create_labels('Forename', 'Surname', 'Team Name', 'Competitor ID', 'Competitor Type ID', self)
         # Data entry buttons
 
-        self.entry_Forename = ttk.Entry(self.data_entry_frame, textvariable=self.Forename_text, width=15).grid(row=0, column=6, padx=15, pady=1)
-        self.entry_Surname = ttk.Entry(self.data_entry_frame, textvariable=self.Surname_text, width=15).grid(row=1, column=6, padx=15, pady=1)
-        self.entry_Team_Name = ttk.Entry(self.data_entry_frame, textvariable=self.Team_Name_text, width=15).grid(row=2, column=6, padx=15, pady=1)
-        self.entry_Competitor_ID = ttk.Entry(self.data_entry_frame, textvariable=self.Competitor_ID_text, width=15).grid(row=3, column=6, padx=15, pady=1)
-        self.entry_Competitor_Type_ID = ttk.Entry(self.data_entry_frame, textvariable=self.Competitor_Type_ID_text, width=15).grid(row=4, column=6, padx=15, pady=1)
+        self.entry_Forename = ttk.Entry(self.data_entry_frame, textvariable=self.Forename_text, width=15)\
+            .grid(row=0, column=6, padx=15, pady=1)
+        self.entry_Surname = ttk.Entry(self.data_entry_frame, textvariable=self.Surname_text, width=15)\
+            .grid(row=1, column=6, padx=15, pady=1)
+        self.entry_Team_Name = ttk.Entry(self.data_entry_frame, textvariable=self.Team_Name_text, width=15)\
+            .grid(row=2, column=6, padx=15, pady=1)
+        self.entry_Competitor_ID = ttk.Entry(self.data_entry_frame, textvariable=self.Competitor_ID_text, width=15)\
+            .grid(row=3, column=6, padx=15, pady=1)
+        self.entry_Competitor_Type_ID = ttk.Entry(self.data_entry_frame, textvariable=self.Competitor_Type_ID_text, width=15)\
+            .grid(row=4, column=6, padx=15, pady=1)
 
-        # List box
-        self.lstResults = tk.Listbox(self.Listbox_frame, width=60)
-        self.lstResults.grid(row=0, column=0, padx=5, pady=5)
-
-        # scroll bar
-        self.scb_lstResults = ttk.Scrollbar(self.Listbox_frame)
-        self.scb_lstResults.grid(row=0, column=1, sticky='ns')
-
-        self.lstResults.configure(yscrollcommand=self.scb_lstResults.set)
-        self.scb_lstResults.config(command=self.lstResults.yview)
+        create_scrollbar(self)
 
         self.scb_lstResults.bind('<<listboxSelect>>', self.get_selected_row)
 
         # Buttons frame
 
-        text = ['View All', 'Search', 'Add', 'Update Selected', 'Delete Selected', 'Main Menu']
-        functions = [self.view_all_command, self.competitor_search_command, self.add_command, self.update_command, self.delete_command, lambda: controller.show_frame(MainMenu)]
-        for i in range(len(text)):
-            button = ttk.Button(self.buttons_frame, text=text[i], width=14, command=functions[i])
-            button.grid(row=i + 1, column=0, padx=5, pady=10, sticky='n')
+        create_buttons('View All', self.view_all_command, 'Search', self.competitor_search_command, 'Add', self.add_command, 'Update Selected', self.update_command, 'Deleted Selected', self.delete_command, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
     def view_all_command(self):
         self.lstResults.delete(0, 'end')
@@ -176,26 +198,14 @@ class Events(ttk.Frame):
 
         # layout frames
 
-        self.content_frame = ttk.Frame(self)
-        self.content_frame.grid(row=0, column=0)
-        self.buttons_frame = ttk.Frame(self)
-        self.buttons_frame.grid(row=0, column=1, ipadx=5, ipady=5, padx=10, pady=10)
-        self.header_frame = ttk.Frame(self.content_frame)
-        self.header_frame.grid(row=0, column=0, sticky='ew')
-        self.data_entry_frame = ttk.Frame(self.content_frame)
-        self.data_entry_frame.grid(row=1, column=0)
-        self.listbox_frame = ttk.Frame(self.content_frame)
-        self.listbox_frame.grid(row=2, column=0, sticky='ns')
+        layout_frames(self)
 
         # header section
         ttk.Label(self.header_frame, text='Events', font=('monsterrat', 22, 'bold'), foreground='blue').grid(row=0, column=1, sticky='W')
 
         # data entry section - labels
 
-        label_text = ['Event', 'Competitor ID', 'Activity ID', 'Score', 'Date', 'Event ID']
-
-        for i in range(len(label_text)):
-            ttk.Label(self.data_entry_frame, text=label_text[i] + ":").grid(row=i, column=0, padx=5, pady=5, sticky="w")
+        create_labels('Event', 'Competitor ID', 'Activity ID', 'Score', 'Date', 'Event ID',self)
 
         # data entry section - entry buttons
         self.entry_eventID = ttk.Entry(self.data_entry_frame, textvariable=self.event_id_text, width=15).grid(row=0, column=1, padx=0, pady=0)
@@ -285,6 +295,8 @@ class Leaderboards(ttk.Frame):
         super().__init__(container)
 
         # Layout Frames
+        layout_frames(self)
+        '''
         self.content_frame = ttk.Frame(self)
         self.content_frame.grid(row=0, column=0)
 
@@ -296,7 +308,7 @@ class Leaderboards(ttk.Frame):
 
         self.listbox_frame = ttk.Frame(self)
         self.listbox_frame.grid(row=0, column=3, ipadx=5, ipady=5, padx=10, pady=10, sticky='n')
-
+        '''
         # Header section
 
         lblTitle = ttk.Label(self, text="Leaderboards")
@@ -316,6 +328,7 @@ class Leaderboards(ttk.Frame):
         self.scb_lstResults.config(command=self.lstResults.yview)
 
         # buttons frame
+        create_buttons('Individual single', self.individual_single, 'Individual multiple', self.individual_multiple, 'Team single', self.team_single, 'Team multiple', self.team_multiple, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
         ttk.Label(self.header_frame, text="Leaderboards", anchor="w").grid(row=0, column=0, sticky="w")
 
@@ -369,6 +382,8 @@ class Activities(ttk.Frame):
         self.activity_id_text = tk.StringVar()
         self.activity_description_text = tk.StringVar()
 
+        layout_frames(self)
+
         self.content_frame = ttk.Frame(self)
         self.content_frame.grid(row=0, column=0)
 
@@ -395,11 +410,9 @@ class Activities(ttk.Frame):
         self.lstResults.configure(yscrollcommand=self.scb_lstResults.set)
         self.scb_lstResults.config(command=self.lstResults.yview)
 
-        button_text = ['View All', 'Search', 'Add', 'Update Selected', 'Delete Selected', 'Main Menu']
-        button_functions = [self.view_all_command, self.search_command, self.add_command, self.update_command, self.delete_command, lambda: controller.show_frame(MainMenu)]
-        for i in range(len(button_text)):
-            button = ttk.Button(self.buttons_frame, text=button_text[i], width=14, command=button_functions[i])
-            button.grid(row=i, column=2, padx=5, pady=5, sticky='n')
+        insert_image("Neco-Arc_Remake (1).png", self, 300, 500)
+
+        create_buttons('View All', self.view_all_command, 'Search', self.search_command, 'Add', self.add_command, 'Update Selected', self.update_command, 'Deleted Selected', self.delete_command, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
     def update_command(self):
         backend.update_events(selected_tuple[0], self.activity_de_text.get(), self.competitor_id_text.get(), self.score_id_text.get(), self.date_text.get(), self.event_type_text.get())
