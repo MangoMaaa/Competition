@@ -149,16 +149,10 @@ class Competitors(ttk.Frame):
             global selected_tuple
             self.lstResults.curselection()
             print(selected_tuple)
-            self.entry_Forename.delete(0, 'end')
-            self.entry_Forename.insert('end', selected_tuple[1])
-            self.entry_Surname.delete(0, 'end')
-            self.entry_Surname.insert('end', selected_tuple[2])
-            self.entry_Team_Name.delete(0, 'end')
-            self.entry_Team_Name.insert('end', selected_tuple[3])
-            self.entry_Competitor_Type_ID.delete(0, 'end')
-            self.entry_Competitor_Type_ID.insert('end', selected_tuple[4])
-            self.entry_Competitor_ID.delete(0, 'end')
-            self.entry_Competitor_ID.insert('end', selected_tuple[0])
+            entry_removal = [self.entry_Competitor_ID, self.entry_Forename, self.entry_Surname, self.entry_Team_Name, self.Competitor_Type_ID]
+            for i in range(len(entry_removal)):
+                entry_removal[i].delete(0, 'end')
+                entry_removal[i].insert('end', selected_tuple[i])
         except IndexError:
             pass
 
@@ -215,26 +209,13 @@ class Events(ttk.Frame):
         self.entry_date = ttk.Entry(self.data_entry_frame, textvariable=self.date_text, width=15).grid(row=4, column=1, padx=0, pady=0)
         self.entry_event_type = ttk.Entry(self.data_entry_frame, textvariable=self.event_type_text, width=15).grid(row=5, column=1, padx=0, pady=0)
 
-        # list box
-        self.lstResults = tk.Listbox(self.listbox_frame, width=60)
-        self.lstResults.grid(row=0, column=6, padx=0, pady=0)
-
-        # scroll bar for list box
-        self.scb_lstResults = ttk.Scrollbar(self.listbox_frame)
-        self.scb_lstResults.grid(row=0, column=7, sticky='ns')
-
-        self.lstResults.configure(yscrollcommand=self.scb_lstResults.set)
-        self.scb_lstResults.config(command=self.lstResults.yview)
+        create_scrollbar(self)
 
         self.scb_lstResults.bind('<<listboxSelect>>', self.event_get_selected_row)
 
         # buttons frame:
 
-        button_text = ['View All', 'Search', 'Add', 'Update Selected', 'Delete Selected', 'Main Menu']
-        button_functions = [self.event_view_all_command, self.event_search_command, self.event_add_command, self.event_update_command, self.event_delete_command, lambda: controller.show_frame(MainMenu)]
-        for i in range(len(button_text)):
-            button = ttk.Button(self.buttons_frame, text=button_text[i], width=14, command=button_functions[i])
-            button.grid(row=i, column=2, padx=5, pady=5, sticky='n')
+        create_buttons('View All', self.event_view_all_command, 'Search', self.event_search_command, 'Add', self.event_add_command, 'Update Selected', self.event_update_command, 'Delete Selected', self.event_delete_command, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
     def event_view_all_command(self):
         self.lstResults.delete(0, 'end')
@@ -248,23 +229,11 @@ class Events(ttk.Frame):
             selected_tuple = self.lstResults.get(index)
             entry_removal = [self.entry_eventID, self.entry_activityID, self.entry_Competitor_ID, self.entry_ScoreID, self.entry_eventID]
 
+
+
             for i in range(len(entry_removal)):
                 entry_removal[i].delete(0, 'end')
                 entry_removal[i].insert('end', selected_tuple[i])
-
-            # Find a way to test this
-            '''
-            self.entry_eventID.delete(0, 'end')
-            self.entry_eventID.insert('end', selected_tuple[0])
-            self.entry_activityID.delete(0, 'end')
-            self.entry_activityID.insert('end', selected_tuple[1])
-            self.entry_Competitor_ID.delete(0, 'end')
-            self.entry_Competitor_ID.insert('end', selected_tuple[2])
-            self.entry_ScoreID.delete(0, 'end')
-            self.entry_ScoreID.insert('end', selected_tuple[3])
-            self.entry_eventID.delete(0, 'end')
-            self.entry_eventID.insert('end', selected_tuple[3])
-            '''
         except IndexError:
             pass
 
@@ -296,78 +265,44 @@ class Leaderboards(ttk.Frame):
 
         # Layout Frames
         layout_frames(self)
-        '''
-        self.content_frame = ttk.Frame(self)
-        self.content_frame.grid(row=0, column=0)
 
-        self.buttons_frame = ttk.Frame(self.content_frame)
-        self.content_frame.grid(row=0, column=1, ipadx=5, ipady=5, padx=10, pady=10, sticky='n')
-
-        self.header_frame = ttk.Frame(self.content_frame)
-        self.header_frame.grid(row=0, column=2, ipadx=5, ipady=5, padx=10, pady=10, sticky='n')
-
-        self.listbox_frame = ttk.Frame(self)
-        self.listbox_frame.grid(row=0, column=3, ipadx=5, ipady=5, padx=10, pady=10, sticky='n')
-        '''
         # Header section
 
         lblTitle = ttk.Label(self, text="Leaderboards")
         lblTitle.grid(row=0, column=0)
 
-        # Listbox
-        self.lstResults = tk.Listbox(self.listbox_frame, width=60)
-        self.lstResults.grid(row=0, column=0, padx=5, pady=5)
-        self.listbox_frame.grid(row=2, column=0, sticky='NS')
-
         # scroll bar
 
-        self.scb_lstResults = ttk.Scrollbar(self.listbox_frame)
-        self.scb_lstResults.grid(row=0, column=1, sticky='ns')
-
-        self.lstResults.configure(yscrollcommand=self.scb_lstResults.set)
-        self.scb_lstResults.config(command=self.lstResults.yview)
+        create_scrollbar(self)
 
         # buttons frame
         create_buttons('Individual single', self.individual_single, 'Individual multiple', self.individual_multiple, 'Team single', self.team_single, 'Team multiple', self.team_multiple, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
         ttk.Label(self.header_frame, text="Leaderboards", anchor="w").grid(row=0, column=0, sticky="w")
 
-        self.lstResults = tk.Listbox(self.listbox_frame, width=60)
-        self.lstResults.grid(row=0, column=0, padx=5, pady=5)
-
-        self.scb_lstResults = ttk.Scrollbar(self.listbox_frame)
-        self.scb_lstResults.grid(row=0, column=1, sticky="NS")
-
-        self.lstResults.configure(yscrollcommand=self.scb_lstResults.set)
-        self.scb_lstResults.config(command=self.lstResults.yview)
-
-        button_text = ['Individual Single Event', 'Individual Multiple Events', 'Team Single Event', 'Team Multiple Event', 'Main Menu']
-        button_functions = [self.individual_single, self.individual_multiple, self.team_single, self.team_multiple, lambda: controller.show_frame(MainMenu)]
-        for i in range(len(button_text)):
-            button = ttk.Button(self.buttons_frame, text=button_text[i], width=16, command=button_functions[i])
-            button.grid(row=i, column=0, padx=5, pady=10, sticky="n")
+        create_scrollbar(self)
 
     def individual_single(self):
         self.lstResults.delete(0, 'end')
-        for row in backend.individual_single_leaderboard():
+        for row in backend.individual_single():
             self.lstResults.insert('end', row)
         print("Individual_single_leaderboard")
 
     def individual_multiple(self):
         self.lstResults.delete(0, 'end')
-        for row in backend.individual_multi_leaderboard():
+        for row in backend.individual_multi():
             self.lstResults.insert('end', row)
         print("Individual_multi_leaderboard")
 
     def team_single(self):
         self.lstResults.delete(0, 'end')
-        for row in backend.team_single_leaderboard():
+        for row in backend.team_single():
             self.lstResults.insert('end', row)
         print("Team_single_leaderboard")
 
     def team_multiple(self):
         self.lstResults.delete(0, 'end')
-        for row in backend.team_multi_leaderboard():
+        for row in backend.team_multi():
             self.lstResults.insert('end', row)
         print("team_multi_leaderboard")
 
@@ -384,31 +319,9 @@ class Activities(ttk.Frame):
 
         layout_frames(self)
 
-        self.content_frame = ttk.Frame(self)
-        self.content_frame.grid(row=0, column=0)
-
-        self.header_frame = ttk.Frame(self.content_frame)
-        self.header_frame.grid(row=0, column=0)
-
         ttk.Label(self.header_frame, text="Activities", anchor="w").grid(row=0, column=0, sticky="w")
 
-        self.buttons_frame = ttk.Frame(self.content_frame)
-        self.buttons_frame.grid(row=0, column=1, ipadx=0, ipady=0, padx=0, pady=0, sticky="n")
-
-        self.data_entry_frame = ttk.Frame(self.content_frame)
-        self.data_entry_frame.grid(row=1, column=0)
-
-        self.listbox_frame = ttk.Frame(self.content_frame)
-        self.listbox_frame.grid(row=2, column=0, sticky="EW")
-
-        self.lstResults = tk.Listbox(self.listbox_frame, width=60)
-        self.lstResults.grid(row=0, column=0, padx=5, pady=5)
-
-        self.scb_lstResults = ttk.Scrollbar(self.listbox_frame)
-        self.scb_lstResults.grid(row=0, column=1, sticky="NS")
-
-        self.lstResults.configure(yscrollcommand=self.scb_lstResults.set)
-        self.scb_lstResults.config(command=self.lstResults.yview)
+        create_scrollbar(self)
 
         insert_image("Neco-Arc_Remake (1).png", self, 300, 500)
 
@@ -458,17 +371,7 @@ class Admin(ttk.Frame):
         lblTitle = ttk.Label(self, text="Admin")
         lblTitle.grid(row=0, column=0)
 
-        self.content_frame = ttk.Frame(self)
-        self.content_frame.grid(row=0, column=0)
-
-        self.buttons_frame = ttk.Frame(self.content_frame)
-        self.buttons_frame.grid(row=0, column=1, ipadx=0, ipady=0, padx=0, pady=0, sticky="n")
-
-        self.header_frame = ttk.Frame(self.content_frame)
-        self.header_frame.grid(row=0, column=2, sticky="EW")
-
-        self.body_frame = ttk.Frame(self.content_frame)
-        self.body_frame.grid(row=1, column=3, sticky="EW")
+        layout_frames(self)
 
         # Title header
 
@@ -476,11 +379,7 @@ class Admin(ttk.Frame):
 
         # Insert Image Here
 
-        button_text = ['Backup database', 'Delete Tables', 'Main Menu']
-        button_functions = [self.delete_database, self.delete_tables, lambda: controller.show_frame(MainMenu)]
-        for i in range(len(button_text)):
-            button = ttk.Button(self.buttons_frame, text=button_text[i], width=16, command=button_functions[i])
-            button.grid(row=i, column=0, padx=5, pady=10, sticky="n")
+        create_buttons('Delete Tables', self.delete_tables, 'Copy Database', self.copy_database, 'Delete Database Copy', self.delete_db_copy, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
     def backup_database(self):
         backend.backup_database(self)
@@ -492,8 +391,10 @@ class Admin(ttk.Frame):
         backend.drop_tables(self)
 
     def copy_database(self):
-        backend.copy_database
+        backend.copy_db()
 
+    def delete_db_copy(self):
+        backend.delete_copy_db()
 
 root = App()
 root.mainloop()
