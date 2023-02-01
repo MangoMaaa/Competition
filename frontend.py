@@ -12,7 +12,7 @@ class App(tk.Tk):
         super().__init__(*args, *kwargs)
 
         self.title("Tournament")
-        self.geometry("1000x800")
+        self.geometry("800x655")
 
         container = ttk.Frame(self)
         container.grid(padx=10, pady=10, sticky="EW")
@@ -21,7 +21,7 @@ class App(tk.Tk):
         for FrameClass in (MainMenu, Competitors, Events, Leaderboards, Activities, Admin):
             frame = FrameClass(container, self)
             self.frames[FrameClass] = frame
-            frame.grid(row=0, column=0, sticky="NSEW")
+            frame.grid(row=1, column=0, sticky="NSEW")
         print(self.frames)
 
         self.show_frame(MainMenu)
@@ -50,6 +50,9 @@ def layout_frames(self):
 
 def create_labels(*text):
     for i in range(len(text)):
+        if i + 1 == len(text):
+            break
+
         ttk.Label(text[len(text)-1].data_entry_frame, text=f"{text[i]}:").grid(row=i, column=0, padx=5, pady=5, sticky="W")
 
 
@@ -57,7 +60,7 @@ def create_buttons(*text):
     try:
         for i in range(0, len(text), 2):
             button = ttk.Button(text[len(text)-1].buttons_frame, text=text[i], width=14, command=text[i + 1])
-            button.grid(row=i + 1, column=0, padx=5, pady=10, sticky='n')
+            button.grid(row=i+1, column=0, padx=5, pady=5, sticky='NS')
     except IndexError:
         return
 
@@ -68,7 +71,7 @@ def insert_image(imageName, sf, imageWidth, imageHeight):
     sport_equipment = ImageTk.PhotoImage(resized_img)
     sport_img = ttk.Label(sf, image=sport_equipment)
     sport_img.image = sport_equipment
-    sport_img.grid(row=1, rowspan=10, column=8)
+    sport_img.grid(row=2, columnspan=200, column=0)
 
 
 def create_scrollbar(self):
@@ -88,15 +91,15 @@ class MainMenu(ttk.Frame):
 
         # Header Label
         lblMainMenu = ttk.Label(self, text="Main Menu", font=("verdana", 22, 'bold'), foreground="red")
-        lblMainMenu.grid(row=0, column=8, sticky="E")
+        lblMainMenu.grid(row=0, column=1, columnspan=3, sticky="SEW")
 
         button_text = [Competitors, Events, Leaderboards, Activities, Admin]
         for i in range(len(button_text)):
             button = ttk.Button(self, text=button_text[i].__name__, width=15, command=lambda i=i: controller.show_frame(button_text[i]))
-            button.grid(row=i, column=1, padx=10, pady=15)
+            button.grid(row=1, column=i+1, padx=10, pady=10, sticky='EW')
 
         exit_button = ttk.Button(self, text="Exit", width=15, command=lambda: exit())
-        exit_button.grid(row=i, column=1, padx=10, pady=15)
+        exit_button.grid(row=1, column=i+2, padx=10, pady=15)
 
         # image
         insert_image("sport equipment.jpg", self, 550, 300)
@@ -108,7 +111,7 @@ class Competitors(ttk.Frame):
 
         layout_frames(self)
 
-        ttk.Label(self.header_frame, text="Competitors", font=("verdana", 22, 'bold'), foreground="red").grid(row=0, column=1, sticky="w")
+        ttk.Label(self.header_frame, text="Competitors", font=("verdana", 22, 'bold'), foreground="red").grid(row=0, column=0)
 
         self.Forename_text = tk.StringVar()
         self.Surname_text = tk.StringVar()
@@ -323,7 +326,16 @@ class Activities(ttk.Frame):
 
         create_scrollbar(self)
 
-        insert_image("Neco-Arc_Remake (1).png", self, 300, 500)
+        insert_image("Neco-Arc_Remake (1).png", self, 3, 5)
+
+        # entry section
+
+        self.entry_activityID = ttk.Entry(self.data_entry_frame, textvariable=self.activity_id_text, width=15).grid(row=0, column=1, padx=0, pady=0)
+        self.entry_activity = ttk.Entry(self.data_entry_frame, textvariable=self.activity_description_text, width=15).grid(row=2, column=1, padx=0, pady=0)
+
+        # entry section labels
+
+        create_labels("Activity ID", "Activity Name", self)
 
         create_buttons('View All', self.view_all_command, 'Search', self.search_command, 'Add', self.add_command, 'Update Selected', self.update_command, 'Deleted Selected', self.delete_command, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
