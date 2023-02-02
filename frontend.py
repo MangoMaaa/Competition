@@ -45,7 +45,7 @@ def layout_frames(self):
     self.data_entry_frame.grid(row=1, column=2, padx=85, ipady=35)
 
     self.listbox_frame = ttk.Frame(self.content_frame)
-    self.listbox_frame.grid(row=2, column=2, columnspan=5, rowspan=50, padx=100, ipady=1000)
+    self.listbox_frame.grid(row=1, column=2, columnspan=10, rowspan=50, padx=100, pady=200, ipady=0, sticky='N')
 
 
 def create_labels(*text):
@@ -53,7 +53,7 @@ def create_labels(*text):
         if i + 1 == len(text):
             break
 
-        ttk.Label(text[len(text)-1].data_entry_frame, text=f"{text[i]}:").grid(row=i+1, column=0, padx=5, pady=5, sticky="W")
+        ttk.Label(text[len(text)-1].data_entry_frame, text=f"{text[i]}:").grid(row=i+1, column=0, padx=5, pady=5, sticky="S")
 
 
 def create_buttons(*text):
@@ -205,12 +205,12 @@ class Events(ttk.Frame):
         create_labels('Event', 'Competitor ID', 'Activity ID', 'Score', 'Date', 'Event ID',self)
 
         # data entry section - entry buttons
-        self.entry_eventID = ttk.Entry(self.data_entry_frame, textvariable=self.event_id_text, width=15).grid(row=0, column=1, padx=0, pady=0)
-        self.entry_Competitor_ID = ttk.Entry(self.data_entry_frame, textvariable=self.competitor_id_text, width=15).grid(row=1, column=1, padx=0, pady=0)
-        self.entry_activityID = ttk.Entry(self.data_entry_frame, textvariable=self.activity_id_text, width=15).grid(row=2, column=1, padx=0, pady=0)
-        self.entry_ScoreID = ttk.Entry(self.data_entry_frame, textvariable=self.score_id_text, width=15).grid(row=3, column=1, padx=0, pady=0)
-        self.entry_date = ttk.Entry(self.data_entry_frame, textvariable=self.date_text, width=15).grid(row=4, column=1, padx=0, pady=0)
-        self.entry_event_type = ttk.Entry(self.data_entry_frame, textvariable=self.event_type_text, width=15).grid(row=5, column=1, padx=0, pady=0)
+        self.entry_eventID = ttk.Entry(self.data_entry_frame, textvariable=self.event_id_text, width=15).grid(row=1, column=1, padx=0, pady=0)
+        self.entry_Competitor_ID = ttk.Entry(self.data_entry_frame, textvariable=self.competitor_id_text, width=15).grid(row=2, column=1, padx=0, pady=0)
+        self.entry_activityID = ttk.Entry(self.data_entry_frame, textvariable=self.activity_id_text, width=15).grid(row=3, column=1, padx=0, pady=0)
+        self.entry_ScoreID = ttk.Entry(self.data_entry_frame, textvariable=self.score_id_text, width=15).grid(row=4, column=1, padx=0, pady=0)
+        self.entry_date = ttk.Entry(self.data_entry_frame, textvariable=self.date_text, width=15).grid(row=5, column=1, padx=0, pady=0)
+        self.entry_event_type = ttk.Entry(self.data_entry_frame, textvariable=self.event_type_text, width=15).grid(row=6, column=1, padx=0, pady=0)
 
         create_scrollbar(self)
 
@@ -271,18 +271,15 @@ class Leaderboards(ttk.Frame):
 
         # Header section
 
-        lblTitle = ttk.Label(self, text="Leaderboards", font=('monsterrat', 22, 'bold'), foreground='#6225da').grid(row=0, column=1, sticky='W')
+        ttk.Label(self.header_frame, text='Leaderboards', font=('monsterrat', 22, 'bold'), foreground='#6225da').grid(row=0, column=1, sticky='W')
 
         # scroll bar
 
         create_scrollbar(self)
 
         # buttons frame
-        create_buttons('Individual single', self.individual_single, 'Individual multiple', self.individual_multiple, 'Team single', self.team_single, 'Team multiple', self.team_multiple, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
+        create_buttons('View All', self.individual_single, 'View All Solo', self.individual_multiple, 'View Single Team', self.team_single,'View All Teams', self.team_multiple, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
-        ttk.Label(self.header_frame, text="Leaderboards", anchor="w").grid(row=0, column=0, sticky="w")
-
-        create_scrollbar(self)
 
     def individual_single(self):
         self.lstResults.delete(0, 'end')
@@ -319,22 +316,25 @@ class Activities(ttk.Frame):
         self.activity_id_text = tk.StringVar()
         self.activity_description_text = tk.StringVar()
 
+        # layout frames
         layout_frames(self)
 
-        ttk.Label(self.header_frame, text="Activities", anchor="w").grid(row=0, column=0, sticky="w")
+        # title
+        ttk.Label(self.header_frame, text='Activities', font=('monsterrat', 22, 'bold'), foreground='#6225da').grid(row=0, column=1, sticky='W')
 
+        # scrollbar
         create_scrollbar(self)
 
+        # image
         insert_image("Neco-Arc_Remake (1).png", self, 3, 5)
 
         # entry section
-
-        self.entry_activityID = ttk.Entry(self.data_entry_frame, textvariable=self.activity_id_text, width=15).grid(row=0, column=1, padx=0, pady=0)
-        self.entry_activity = ttk.Entry(self.data_entry_frame, textvariable=self.activity_description_text, width=15).grid(row=2, column=1, padx=0, pady=0)
+        self.entry_activityID = ttk.Entry(self.data_entry_frame, textvariable=self.activity_id_text, width=15).grid(row=1, column=1, padx=0, pady=0, sticky='N')
+        self.entry_activity = ttk.Entry(self.data_entry_frame, textvariable=self.activity_description_text, width=15).grid(row=2, column=1, padx=0, pady=0, sticky='S')
 
         # entry section labels
-
         create_labels("Activity ID", "Activity Name", self)
+
 
         create_buttons('View All', self.view_all_command, 'Search', self.search_command, 'Add', self.add_command, 'Update Selected', self.update_command, 'Deleted Selected', self.delete_command, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
@@ -379,14 +379,13 @@ class Admin(ttk.Frame):
     def __init__(self, container, controller):
         super().__init__(container)
 
-        lblTitle = ttk.Label(self, text="Admin")
-        lblTitle.grid(row=0, column=0)
+        lblTitle = ttk.Label(self, text="Admin").grid(row=0, column=0)
 
         layout_frames(self)
 
         # Title header
 
-        ttk.Label(self.header_frame, text="Administration", font=("montserrat", 22, 'bold', 'underline'), foreground="blue").grid(row=0, column=1, sticky="w")
+        ttk.Label(self.header_frame, text='Administration', font=('monsterrat', 22, 'bold'), foreground='#6225da').grid(row=0, column=1, sticky='W')
 
         # Insert Image Here
 
