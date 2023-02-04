@@ -140,7 +140,7 @@ class Competitors(ttk.Frame):
 
         # Buttons frame
 
-        create_buttons('View All', self.view_all_command, 'Search', self.competitor_search_command, 'Add', self.add_command, 'Update Selected', self.update_command, 'Delete Selected', self.delete_command, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
+        create_buttons('View All', self.view_all_command, 'Search', self.competitor_search, 'Add', self.add_command, 'Update Selected', self.update_command, 'Delete Selected', self.delete_competitor, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
     def view_all_command(self):
         self.lstResults.delete(0, 'end')
@@ -159,7 +159,7 @@ class Competitors(ttk.Frame):
         except IndexError:
             pass
 
-    def competitor_search_command(self):
+    def competitor_search(self):
         self.lstResults.delete(0, 'end')
         for row in backend.competitor_search(self.Forename_text.get(), self.Surname_text.get(),
                                              self.Team_Name_text.get(), self.Competitor_ID_text.get(), self.Competitor_ID_text.get()):
@@ -175,10 +175,10 @@ class Competitors(ttk.Frame):
         print(selected_tuple[0])
         backend.update_competitor(selected_tuple[0], self.Forename_text.get(), self.Surname_text.get(), self.Competitor_Type_ID_text.get(), self.Competitor_ID_text.get(), self.Competitor_Type_ID_text.get())
 
-    def delete_command(self):
+    def delete_competitor(self):
         backend.delete_competitor(selected_tuple[0])
         self.lstResults.delete(0, 'end')
-        for row in backend.competitors_view_all():
+        for row in backend.view_all_competitors():
             self.lstResults.insert('end', row)
 
 
@@ -278,30 +278,29 @@ class Leaderboards(ttk.Frame):
         create_scrollbar(self)
 
         # buttons frame
-        create_buttons('View All', self.individual_single, 'View All Solo', self.individual_multiple, 'View Single Team', self.team_single,'View All Teams', self.team_multiple, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
+        create_buttons('View All', self.contestant_view_all, 'View All Solo', self.view_all_solo, 'View Single Team', self.view_all_one_team,'View All Teams', self.view_all_teams, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
-
-    def individual_single(self):
+    def contestant_view_all(self):
         self.lstResults.delete(0, 'end')
-        for row in backend.individual_single():
+        for row in backend.contestant_view_all():
             self.lstResults.insert('end', row)
         print("Individual_single_leaderboard")
 
-    def individual_multiple(self):
+    def view_all_solo(self):
         self.lstResults.delete(0, 'end')
-        for row in backend.individual_multi():
+        for row in backend.view_all_solo():
             self.lstResults.insert('end', row)
         print("Individual_multi_leaderboard")
 
-    def team_single(self):
+    def view_all_one_team(self):
         self.lstResults.delete(0, 'end')
-        for row in backend.team_single():
+        for row in backend.view_all_one_team():
             self.lstResults.insert('end', row)
         print("Team_single_leaderboard")
 
-    def team_multiple(self):
+    def view_all_teams(self):
         self.lstResults.delete(0, 'end')
-        for row in backend.team_multi():
+        for row in backend.view_all_teams():
             self.lstResults.insert('end', row)
         print("team_multi_leaderboard")
 
@@ -335,11 +334,10 @@ class Activities(ttk.Frame):
         # entry section labels
         create_labels("Activity ID", "Activity Name", self)
 
-
         create_buttons('View All', self.view_all_command, 'Search', self.search_command, 'Add', self.add_command, 'Update Selected', self.update_command, 'Deleted Selected', self.delete_command, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
     def update_command(self):
-        backend.update_events(selected_tuple[0], self.activity_de_text.get(), self.competitor_id_text.get(), self.score_id_text.get(), self.date_text.get(), self.event_type_text.get())
+        backend.update_events(selected_tuple[0], self.activity_id_text.get(), self.competitor_id_text.get(), self.score_id_text.get(), self.date_text.get(), self.event_type_text.get())
 
     def view_all_command(self):
         self.lstResults.delete(0, 'end')
@@ -361,7 +359,7 @@ class Activities(ttk.Frame):
 
     def search_command(self):
         self.lstResults.delete(0, 'end')
-        for row in backend.activity_search(self.event_id_text.get(), self.activity_id_text.get(), self.competitor_id_text.get(), self.score_id_text.get(), self.date_text.get(), self.event_type_text.get()):
+        for row in backend.activity_search(self.activity_id_text.get(), self.activity_description_text.get()):
             self.lstResults.insert('end', row)
 
     def add_command(self):
@@ -390,7 +388,7 @@ class Admin(ttk.Frame):
         create_buttons('Delete Tables', self.delete_tables, 'Copy Database', self.copy_database, 'Delete Database Copy', self.delete_db_copy, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
     def backup_database(self):
-        backend.backup_database(self)
+        backend.copy_db(self)
 
     def delete_database(self):
         backend.delete_database(self)
