@@ -387,8 +387,6 @@ class Admin(ttk.Frame):
 
         ttk.Label(self.header_frame, text='Administration', font=('monsterrat', 22, 'bold'), foreground='#6225da').grid(row=0, column=1, sticky='W')
 
-        # Insert Image Here
-
         create_buttons('Delete Tables', self.delete_tables, 'Copy Database', self.copy_database, 'Delete Database Copy', self.delete_db_copy, 'Main Menu', lambda: controller.show_frame(MainMenu), self)
 
     def backup_database(self):
